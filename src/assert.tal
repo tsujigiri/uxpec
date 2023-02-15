@@ -1,27 +1,27 @@
 (
-	A collection of tests to be performed on the stack
+  A collection of tests to be performed on the stack
 
-	Consumes an absolute address to a null-terminated string in memory and the
-	result of some operation from the stack (in that order) and prints the
-	string along with an indication whether the test was successful according
-	to the assertion used.
+  Consumes an absolute address to a null-terminated string in memory and the
+  result of some operation from the stack (in that order) and prints the
+  string along with an indication whether the test was successful according
+  to the assertion used.
 
-	<result> short --
+  <result> short --
 )
 @assert
-	( check for a non-zero byte on the stack )
-	&true
-		;print JSR2
-		,&success JCN
-		,&fail JMP
+  ( check for a non-zero byte on the stack )
+  &true
+    ;print JSR2
+    ,&success JCN
+    ,&fail JMP
 
-	&success
+  &success
     ;assert-success-symbol ;print JSR2
-		JMP2r
-	&fail
+    JMP2r
+  &fail
     #01 ;assert-status STA
     ;assert-fail-symbol ;print JSR2
-		JMP2r
+    JMP2r
 
 @uxpec-exit
   ;assert-status LDA ,&fail JCN ,&succeed JMP
