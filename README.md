@@ -16,7 +16,7 @@ So far there is one assertion, `;assert/true`, which checks whether the value
 to be tested is a non-zero byte:
 
 ```
-#01 EQU #02
+#01 #02 EQU
 ;description ;assert/true JSR2
 ```
 
