@@ -1,8 +1,8 @@
 |10 @Console [ &vector $2 &read $1 &pad $5 &write $1 &err $1 ]
 
 |0100
-	#01 ;description-1 ;assert/true JSR2
-	#00 ;description-2 ;assert/true JSR2
+  #01 ;description-1 ;assert/true JSR2
+  #00 ;description-2 ;assert/true JSR2
 
   ;uxpec-exit JMP2
 
