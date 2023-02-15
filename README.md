@@ -20,7 +20,7 @@ to be tested is a non-zero byte:
 ;description ;assert/true JSR2
 ```
 
-End your testing rom with `;uxpec-exit` to exit the program with the
+End your testing rom with `;uxpec-exit JMP2` to exit the program with the
 appropriate exit code.
 
 See `etc/demo.tal` for a complete example.
