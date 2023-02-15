@@ -23,7 +23,7 @@
     ;assert-fail-symbol ;print JSR2
 		JMP2r
 
-@assert-exit
+@uxpec-exit
   ;assert-status LDA ,&fail JCN ,&succeed JMP
   &fail #010f DEO BRK
   &succeed #800f DEO BRK
