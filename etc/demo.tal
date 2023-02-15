@@ -1,0 +1,11 @@
+|10 @Console [ &vector $2 &read $1 &pad $5 &write $1 &err $1 ]
+
+|0100
+	#01 ;description-1 ;assert/true JSR2
+	#00 ;description-2 ;assert/true JSR2
+
+  ;assert-exit JMP2
+
+@description-1 "this 20 "is 20 "a 20 "successful 20 "test 00
+@description-2 "this 20 "is 20 "a 20 "failing 20 "test 00
+
