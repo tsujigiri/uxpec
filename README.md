@@ -5,8 +5,9 @@ a testing tool for [uxn](https://100r.co/site/uxn.html)
 ## Usage
 
 uxpec provides assertions to be performed on the stack, prints a description of
-the assertion provided by you in your test, and sets the exit code depending on
-whether any of the assertions in your testing rom failed or not.
+the assertion provided by you in your test along with an indication of the
+assertion's success, and sets the exit code depending on whether any of the
+assertions in your testing rom failed or not.
 
 All assertions consume an absolute address to a null-terminated string in
 memory from the stack first and then check the next value on the stack
