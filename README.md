@@ -4,25 +4,37 @@ a testing tool for [uxn](https://100r.co/site/uxn.html)
 
 ## Usage
 
-uxpec provides assertions to be performed on the stack, prints a description of
-the assertion provided by you in your test along with an indication of the
-assertion's success, and sets the exit code depending on whether any of the
-assertions in your testing rom failed or not.
-
-All assertions consume an absolute address to a null-terminated string in
-memory from the stack first and then check the next value on the stack
-according to the assertion used.
-
-So far there is one assertion, `;assert/true`, which checks whether the value
-to be tested is a non-zero byte:
+uxpec provides a tal-based DSL for testing your code. Namely, `describe` and
+`it` functions that are used to *describe* what is being tested and what *it* is
+supposed to behave like. Further, it provides assertions to be performed on the
+stack after your code under test has run. So far there is one assertion,
+`;assert/true`, which checks whether the value to be tested is a non-zero byte:
 
 ```
-#01 #02 EQU
-;description ;assert/true JSR2
+;describe JSR2 "my 20 "code 00
+  ;it JSR2 "does 20 "stuff 00
+    ;my-code JSR2 ( leaves a result on the stack )
+    ;assert/true JSR2 ( checks that the result is a non-zero byte )
+
+;uxpec-exit JMP2` ( exit the test program with an appropriate exit code )
 ```
 
-End your testing rom with `;uxpec-exit JMP2` to exit the program with the
-appropriate exit code.
+If the assertions are successful, the output on the terminal will look like
+this:
+
+```
+my code
+  does stuff 👌
+```
+
+if they failed, it will look like this:
+
+```
+my code
+  does stuff 🔥
+```
+
+and it will return with a non-zero exit code.
 
 See `etc/demo.tal` for a complete example.
 

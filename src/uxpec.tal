@@ -1,0 +1,57 @@
+(
+  A collection of tests to be performed on the stack
+
+  Consumes the result of some operation from the stack and prints an indication
+  of whether the test was successful or not according to the assertion used.
+
+  <result> --
+)
+@assert
+  ( check for a non-zero byte on the stack )
+  &true
+    ,&success JCN
+    ,&fail JMP
+
+  &success
+    ;assert-success-symbol ;uxpec-print JSR2
+    JMP2r
+
+  &fail
+    #01 ;assert-status STA
+    ;assert-fail-symbol ;uxpec-print JSR2
+    JMP2r
+
+@uxpec-exit
+  ;assert-status LDA ,&fail JCN ,&succeed JMP
+  &fail #010f DEO BRK
+  &succeed #800f DEO BRK
+
+@assert-success-symbol 20 f0 9f 91 8c #0a 00
+@assert-fail-symbol    20 f0 9f 94 a5 #0a 00
+@assert-status 00
+
+
+@describe
+	STH2r
+	;uxpec-print JSR2
+	#0a .Console/write DEO ( \n )
+	JMP2
+
+( prints the address of the describe string and its own )
+@it
+	STH2r
+	#09 .Console/write DEO ( \t )
+	;uxpec-print JSR2
+	JMP2
+
+(
+	prints a null-terminated string from the absolute address on the stack and
+	jumps back to the address on the return stack
+)
+@uxpec-print
+	&loop
+		LDAk DUP ,&print-char JCN
+		POP INC2 JMP2r
+	&print-char
+		.Console/write DEO INC2 ,&loop JMP
+
