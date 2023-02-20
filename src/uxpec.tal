@@ -33,21 +33,24 @@
 
 @describe
 	STH2r
+	#0a .Console/write DEO ( \n )
 	;uxpec-print JSR2
 	#0a .Console/write DEO ( \n )
+  #01 ;uxpec-indent-level STA
 	JMP2
 
 @context
 	STH2r
-	#09 .Console/write DEO ( \t )
+  ;uxpec-indent JSR2
 	;uxpec-print JSR2
 	#0a .Console/write DEO ( \n )
+  ;uxpec-indent-level LDA INC ;uxpec-indent-level STA
 	JMP2
 
 ( prints the address of the describe string and its own )
 @it
 	STH2r
-	#0909 .Console/write DEO2 ( \t\t )
+  ;uxpec-indent JSR2
 	;uxpec-print JSR2
 	JMP2
 
@@ -61,4 +64,11 @@
 		POP INC2 JMP2r
 	&print-char
 		.Console/write DEO INC2 ,&loop JMP
+
+@uxpec-indent
+  ;uxpec-indent-level LDA
+  &print-tab #09 .Console/write DEO #01 SUB DUP ,&print-tab JCN
+  POP JMP2r
+
+@uxpec-indent-level 00
 

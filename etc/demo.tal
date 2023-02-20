@@ -5,19 +5,26 @@
 %context { ;context JSR2 }
 
 |0100
-	describe "something 00
+	describe "testing 20 "something 00
+		it "is 20 "true 00
+			#01 ;assert/true JSR2
+		it "should 20 "be 20 "true 20 "but 20 "isn't 00
+			#00 ;assert/true JSR2
+
+	describe "testing 20 "something 20 "with 20 "one 20 "level 20 "of 20 "context 00
 		context "when 20 "this 20 "happens 00
 			it "is 20 "true 00
 				#01 ;assert/true JSR2
 			it "should 20 "be 20 "true 20 "but 20 "isn't 00
 				#00 ;assert/true JSR2
 
-	describe "something 20 "else 00
-		context "when 20 "that 20 "happens 00
-			it "is 20 "true 00
-				#01 ;assert/true JSR2
-			it "should 20 "be 20 "true 20 "but 20 "isn't 00
-				#00 ;assert/true JSR2
+	describe "testing 20 "something 20 "with 20 "two 20 "levels 20 "of 20 "context 00
+		context "when 20 "this 20 "happens 00
+			context "when 20 "this 20 "other 20 "thing 20 "is 20 "true 00
+				it "is 20 "true 00
+					#01 ;assert/true JSR2
+				it "should 20 "be 20 "true 20 "but 20 "isn't 00
+					#00 ;assert/true JSR2
 
 	;uxpec-exit JMP2
 
