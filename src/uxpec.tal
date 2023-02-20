@@ -37,10 +37,17 @@
 	#0a .Console/write DEO ( \n )
 	JMP2
 
+@context
+	STH2r
+	#09 .Console/write DEO ( \t )
+	;uxpec-print JSR2
+	#0a .Console/write DEO ( \n )
+	JMP2
+
 ( prints the address of the describe string and its own )
 @it
 	STH2r
-	#09 .Console/write DEO ( \t )
+	#0909 .Console/write DEO2 ( \t\t )
 	;uxpec-print JSR2
 	JMP2
 

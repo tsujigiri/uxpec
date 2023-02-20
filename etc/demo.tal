@@ -2,13 +2,22 @@
 
 %describe { ;describe JSR2 }
 %it { ;it JSR2 }
+%context { ;context JSR2 }
 
 |0100
 	describe "something 00
-		it "is 20 "true 00
-			#01 ;assert/true JSR2
-		it "should 20 "be 20 "true 20 "but 20 "isn't 00
-			#00 ;assert/true JSR2
+		context "when 20 "this 20 "happens 00
+			it "is 20 "true 00
+				#01 ;assert/true JSR2
+			it "should 20 "be 20 "true 20 "but 20 "isn't 00
+				#00 ;assert/true JSR2
 
-  ;uxpec-exit JMP2
+	describe "something 20 "else 00
+		context "when 20 "that 20 "happens 00
+			it "is 20 "true 00
+				#01 ;assert/true JSR2
+			it "should 20 "be 20 "true 20 "but 20 "isn't 00
+				#00 ;assert/true JSR2
+
+	;uxpec-exit JMP2
 
