@@ -14,11 +14,7 @@ demo: bin/demo.rom
 debug: bin/demo.rom
 	${UXNEMU} ${UXN_ROMS}/beetbug.rom bin/demo.rom
 
-bin/demo.rom: tmp etc/demo.tal src/uxpec.tal
-	cat etc/demo.tal src/uxpec.tal > tmp/build.tal
-	uxnasm tmp/build.tal $@
-
-tmp:
-	mkdir tmp
+bin/demo.rom: etc/demo.tal
+	uxnasm etc/demo.tal $@
 
 .PHONY: demo debug
