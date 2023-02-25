@@ -11,12 +11,14 @@ SHELL = /bin/bash
 demo: bin/demo.rom
 	-${UXNCLI} $^
 
-bin/demo.rom: etc/demo.tal src/uxpec.tal
-	rm -rf tmp
-	mkdir -p bin tmp
-	cat $^ > tmp/build.tal
-	uxnasm tmp/build.tal $@
-
 debug: bin/demo.rom
 	${UXNEMU} ${UXN_ROMS}/beetbug.rom bin/demo.rom
 
+bin/demo.rom: tmp etc/demo.tal src/uxpec.tal
+	cat etc/demo.tal src/uxpec.tal > tmp/build.tal
+	uxnasm tmp/build.tal $@
+
+tmp:
+	mkdir tmp
+
+.PHONY: demo debug

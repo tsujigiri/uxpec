@@ -7,24 +7,24 @@
   <result> --
 )
 @assert
-  ( check for a non-zero byte on the stack )
-  &true
-    ,&success JCN
-    ,&fail JMP
+	( check for a non-zero byte on the stack )
+	&true
+		?&success
+		!&fail
 
-  &success
-    ;assert-success-symbol ;uxpec-print JSR2
-    JMP2r
+	&success
+		;assert-success-symbol uxpec-print
+		JMP2r
 
-  &fail
-    #01 ;assert-status STA
-    ;assert-fail-symbol ;uxpec-print JSR2
-    JMP2r
+	&fail
+		#01 ;assert-status STA
+		;assert-fail-symbol uxpec-print
+		JMP2r
 
 @uxpec-exit
-  ;assert-status LDA ,&fail JCN ,&succeed JMP
-  &fail #010f DEO BRK
-  &succeed #800f DEO BRK
+	;assert-status LDA ?&fail !&succeed
+	&fail #010f DEO BRK
+	&succeed #800f DEO BRK
 
 @assert-success-symbol 20 f0 9f 91 8c #0a 00
 @assert-fail-symbol    20 f0 9f 94 a5 #0a 00
@@ -34,24 +34,24 @@
 @describe
 	STH2r
 	#0a .Console/write DEO ( \n )
-	;uxpec-print JSR2
+	uxpec-print
 	#0a .Console/write DEO ( \n )
-  #01 ;uxpec-indent-level STA
+	#01 ;uxpec-indent-level STA
 	JMP2
 
 @context
 	STH2r
-  ;uxpec-indent JSR2
-	;uxpec-print JSR2
+	uxpec-indent
+	uxpec-print
 	#0a .Console/write DEO ( \n )
-  ;uxpec-indent-level LDA INC ;uxpec-indent-level STA
+	;uxpec-indent-level LDA INC ;uxpec-indent-level STA
 	JMP2
 
 ( prints the address of the describe string and its own )
 @it
 	STH2r
-  ;uxpec-indent JSR2
-	;uxpec-print JSR2
+	uxpec-indent
+	uxpec-print
 	JMP2
 
 (
@@ -60,14 +60,14 @@
 )
 @uxpec-print
 	&loop
-		LDAk DUP ,&print-char JCN
+		LDAk DUP ?&print-char
 		POP INC2 JMP2r
 	&print-char
-		.Console/write DEO INC2 ,&loop JMP
+		.Console/write DEO INC2 !&loop
 
 @uxpec-indent
   ;uxpec-indent-level LDA
-  &print-tab #09 .Console/write DEO #01 SUB DUP ,&print-tab JCN
+  &print-tab #09 .Console/write DEO #01 SUB DUP ?&print-tab
   POP JMP2r
 
 @uxpec-indent-level 00
