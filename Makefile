@@ -14,7 +14,7 @@ demo: bin/demo.rom
 debug: bin/demo.rom
 	${UXNEMU} ${UXN_ROMS}/beetbug.rom bin/demo.rom
 
-bin/demo.rom: etc/demo.tal
+bin/demo.rom: etc/demo.tal src/uxpec.tal
 	uxnasm etc/demo.tal $@
 
 .PHONY: demo debug
