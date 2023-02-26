@@ -30,12 +30,11 @@
 @assert-fail-symbol    20 f0 9f 94 a5 #0a 00
 @assert-status 00
 
-
 @describe
 	STH2r
-	#0a .Console/write DEO ( \n )
+	#0a18 DEO ( \n )
 	uxpec-print
-	#0a .Console/write DEO ( \n )
+	#0a18 DEO ( \n )
 	#01 ;uxpec-indent-level STA
 	JMP2
 
@@ -43,7 +42,7 @@
 	STH2r
 	uxpec-indent
 	uxpec-print
-	#0a .Console/write DEO ( \n )
+	#0a18 DEO ( \n )
 	;uxpec-indent-level LDA INC ;uxpec-indent-level STA
 	JMP2
 
@@ -63,11 +62,11 @@
 		LDAk DUP ?&print-char
 		POP INC2 JMP2r
 	&print-char
-		.Console/write DEO INC2 !&loop
+		#18 DEO INC2 !&loop
 
 @uxpec-indent
   ;uxpec-indent-level LDA
-  &print-tab #09 .Console/write DEO #01 SUB DUP ?&print-tab
+  &print-tab #0918 DEO #01 SUB DUP ?&print-tab
   POP JMP2r
 
 @uxpec-indent-level 00
