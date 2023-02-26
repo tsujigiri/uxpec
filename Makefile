@@ -1,7 +1,7 @@
 UXNASM ?= uxnasm
 UXNEMU ?= uxnemu
 UXNCLI ?= uxncli
-UXN_ROMS ?= ../bin
+UXN_ROMS ?= ${HOME}/roms
 DEBUGGER ?= ${UXN_ROMS}/beetbug.rom
 
 SHELL = /bin/bash
