@@ -12,7 +12,7 @@ demo: bin/demo.rom
 	-${UXNCLI} $^
 
 debug: bin/demo.rom
-	${UXNEMU} ${UXN_ROMS}/beetbug.rom bin/demo.rom
+	${UXNEMU} ${DEBUGGER} bin/demo.rom
 
 bin/demo.rom: etc/demo.tal src/uxpec.tal
 	uxnasm etc/demo.tal $@
