@@ -17,6 +17,9 @@ describe "my 20 "code 00
     it "does 20 "stuff 00
       my-code ( leaves a result on the stack )
       assert/true ( checks that the result is a non-zero byte )
+    end
+  end
+end
 
 !uxpec-exit ( exit the test program with an appropriate exit code )
 ```
