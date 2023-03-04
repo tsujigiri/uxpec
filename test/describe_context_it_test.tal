@@ -1,43 +1,23 @@
-print "assertions 20 "work 20 "on 20 "their 20 "own 00
-#01 assert/true
-
-it "works 20 "if 20 "we 20 "put 20 "assertions 20 "within 20 "it 20 "blocks 00
+it "allows 20 "using 20 "it 20 "blocks 20 "on 20 "their 20 "own 00
 	#01 assert/true
 end
 
 context "within 20 "a 20 "context 20 "block 00
-	print 09 "assertions 20 "work 20 "on 20 "their 20 "own 00
-	#01 assert/true
-
-	context "within 20 "a 20 "context 20 "block 00
-		print 09 09 "assertions 20 "work 20 "on 20 "their 20 "own 00
-		#01 assert/true
-	end
-
-	it "allows 20 "using 20 "assertions 20 "within 20 "it 20 "blocks 00
+	it "works 00
 		#01 assert/true
 	end
 end
 
 describe "using 20 "describe 20 "blocks 00
-	print 09 "assertions 20 "work 20 "on 20 "their 20 "own 00
-	#01 assert/true
-
 	context "within 20 "a 20 "context 20 "block 00
-		print 09 09 "assertions 20 "work 20 "on 20 "their 20 "own 00
-		#01 assert/true
-
-		context "within 20 "a 20 "context 20 "block 00
-			print 09 09 09 "assertions 20 "work 20 "on 20 "their 20 "own 00
+		it "works 00
 			#01 assert/true
-
-			it "allows 20 "using 20 "assertions 20 "within 20 "it 20 "blocks 00
-				#01 assert/true
-			end
 		end
 
-		it "allows 20 "using 20 "assertions 20 "within 20 "it 20 "blocks 00
-			#01 assert/true
+		context "within 20 "a 20 "context 20 "block 00
+			it "works 00
+				#01 assert/true
+			end
 		end
 	end
 end

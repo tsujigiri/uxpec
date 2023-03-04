@@ -17,13 +17,15 @@
 		!&success
 
 	&success
-		;assert-success-symbol uxpec-print
-		JMP2r
+		!&return
 
 	&fail
 		#01 ;uxpec-assert-failed STA
 		#01 ;uxpec-assert-failed-global STA
-		;assert-fail-symbol uxpec-print
+		!&return
+
+	&return
+		#01 ;uxpec-assert-called STA
 		JMP2r
 
 @uxpec-exit
@@ -34,6 +36,7 @@
 @assert-success-symbol 20 f0 9f 91 8c #0a 00
 @assert-fail-symbol    20 f0 9f 94 a5 #0a 00
 @uxpec-assert-failed 00
+@uxpec-assert-called 00
 @uxpec-assert-failed-global 00
 
 @describe
@@ -53,7 +56,15 @@
 
 @end
 	;uxpec-indent-level LDA #01 SUB ;uxpec-indent-level STA
-	JMP2r
+	;uxpec-assert-called LDA ?&indicate-status !&return
+	&indicate-status
+		#00 ;uxpec-assert-called STA
+		;uxpec-assert-failed LDA ?&fail !&success
+		&fail ;assert-fail-symbol uxpec-print !&return
+		&success ;assert-success-symbol uxpec-print
+	&return
+		#00 ;uxpec-assert-failed STA
+		JMP2r
 
 (
 	prints a null-terminated string from the absolute address on the stack and
