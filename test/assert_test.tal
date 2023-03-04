@@ -1,0 +1,35 @@
+describe "assert/true 00
+  context "when 20 "the 20 "value 20 "on 20 "the 20 "stack 20 "is 20 "true 00
+    it "succeeds 00
+      #01 assert/true
+    end
+  end
+
+  context "when 20 "the 20 "value 20 "on 20 "the 20 "stack 20 "is 20 "false 00
+    it "fails 00
+      #00 assert/true
+
+      ;uxpec-assert-failed LDA assert/true
+      #00 ;uxpec-assert-failed STA
+      #00 ;uxpec-assert-failed-global STA
+    end
+  end
+end
+
+describe "assert/false 00
+  context "when 20 "the 20 "value 20 "on 20 "the 20 "stack 20 "is 20 "false 00
+    it "succeeds 00
+      #00 assert/false
+    end
+  end
+
+  context "when 20 "the 20 "value 20 "on 20 "the 20 "stack 20 "is 20 "true 00
+    it "fails 00
+      #01 assert/false
+
+      ;uxpec-assert-failed LDA assert/true
+      #00 ;uxpec-assert-failed STA
+      #00 ;uxpec-assert-failed-global STA
+    end
+  end
+end

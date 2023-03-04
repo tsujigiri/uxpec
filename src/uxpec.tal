@@ -12,46 +12,48 @@
 		?&success
 		!&fail
 
+	&false
+		?&fail
+		!&success
+
 	&success
 		;assert-success-symbol uxpec-print
 		JMP2r
 
 	&fail
-		#01 ;assert-status STA
+		#01 ;uxpec-assert-failed STA
+		#01 ;uxpec-assert-failed-global STA
 		;assert-fail-symbol uxpec-print
 		JMP2r
 
 @uxpec-exit
-	;assert-status LDA ?&fail !&succeed
+	;uxpec-assert-failed-global LDA ?&fail !&succeed
 	&fail #010f DEO BRK
 	&succeed #800f DEO BRK
 
 @assert-success-symbol 20 f0 9f 91 8c #0a 00
 @assert-fail-symbol    20 f0 9f 94 a5 #0a 00
-@assert-status 00
+@uxpec-assert-failed 00
+@uxpec-assert-failed-global 00
 
 @describe
-	STH2r
-	#0a18 DEO ( \n )
-	uxpec-print
-	#0a18 DEO ( \n )
-	#01 ;uxpec-indent-level STA
-	JMP2
-
 @context
-	STH2r
 	uxpec-indent
-	uxpec-print
+	STH2r uxpec-print
 	#0a18 DEO ( \n )
 	;uxpec-indent-level LDA INC ;uxpec-indent-level STA
 	JMP2
 
 ( prints the address of the describe string and its own )
 @it
-	STH2r
 	uxpec-indent
-	uxpec-print
+	STH2r uxpec-print
+	;uxpec-indent-level LDA INC ;uxpec-indent-level STA
 	JMP2
+
+@end
+	;uxpec-indent-level LDA #01 SUB ;uxpec-indent-level STA
+	JMP2r
 
 (
 	prints a null-terminated string from the absolute address on the stack and
@@ -66,8 +68,12 @@
 
 @uxpec-indent
   ;uxpec-indent-level LDA
-  &print-tab #0918 DEO #01 SUB DUP ?&print-tab
-  POP JMP2r
+  &loop
+    DUP #00 EQU ?&return
+    #0918 DEO
+    #01 SUB
+    !&loop
+  &return POP JMP2r
 
 @uxpec-indent-level 00
 
