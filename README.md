@@ -8,8 +8,8 @@ uxpec provides a tal-based DSL for testing your code. Namely, `describe`,
 `context` and `it` functions that are used to *describe* what is being tested
 and what *it* is supposed to behave like in a specific *context*. Further, it
 provides assertions to be performed on the stack after your code under test has
-run. So far there is one assertion, `assert/true`, which checks whether the
-value to be tested is a non-zero byte:
+run. So far there are two assertions, `assert/true` and `assert/false`, which
+check whether the value on the stack is a non-zero or zero byte, respectively:
 
 ```
 describe "my 20 "code 00
