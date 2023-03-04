@@ -2,6 +2,9 @@
 
 a testing tool for [uxn](https://100r.co/site/uxn.html)
 
+***WARNING***: This is a very new venture and, as such, is changing a lot.
+Consider this when using it!
+
 ## Usage
 
 uxpec provides a tal-based DSL for testing your code. Namely, `describe`,
