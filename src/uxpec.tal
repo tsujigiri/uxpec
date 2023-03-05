@@ -16,6 +16,17 @@
 		?&fail
 		!&success
 
+	&stack-empty
+		#00 DEI2 ;uxpec-system-vector-backup STA2
+		;assert/stack-empty-catch #00 DEO2
+		POPk
+		;uxpec-system-vector-backup LDA2 #00 DEO2
+		!&fail
+		&stack-empty-catch
+			;uxpec-system-vector-backup LDA2 #00 DEO2
+			POP2 POP2
+			!&success
+
 	&success
 		!&return
 
@@ -33,11 +44,12 @@
 	&fail #010f DEO BRK
 	&succeed #800f DEO BRK
 
-@assert-success-symbol 20 f0 9f 91 8c #0a 00
-@assert-fail-symbol    20 f0 9f 94 a5 #0a 00
+@assert-success-symbol 20 f0 9f 91 8c 0a 00
+@assert-fail-symbol    20 f0 9f 94 a5 0a 00
 @uxpec-assert-failed 00
 @uxpec-assert-called 00
 @uxpec-assert-failed-global 00
+@uxpec-system-vector-backup 0000
 
 @describe
 @context
@@ -60,8 +72,9 @@
 	&indicate-status
 		#00 ;uxpec-assert-called STA
 		;uxpec-assert-failed LDA ?&fail !&success
-		&fail ;assert-fail-symbol uxpec-print !&return
-		&success ;assert-success-symbol uxpec-print
+		&fail ;assert-fail-symbol uxpec-print POP2 !&return
+		&success ;assert-success-symbol uxpec-print POP2
+
 	&return
 		#00 ;uxpec-assert-failed STA
 		JMP2r
@@ -81,10 +94,9 @@
   ;uxpec-indent-level LDA
   &loop
     DUP #00 EQU ?&return
-    #0918 DEO
+    #0918 DEO ( \t )
     #01 SUB
     !&loop
   &return POP JMP2r
 
 @uxpec-indent-level 00
-

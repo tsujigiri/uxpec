@@ -2,6 +2,7 @@ describe "assert/true 00
 	context "when 20 "the 20 "value 20 "on 20 "the 20 "stack 20 "is 20 "true 00
 		it "succeeds 00
 			#01 assert/true
+			assert/stack-empty
 		end
 	end
 
@@ -16,6 +17,8 @@ describe "assert/true 00
 			;uxpec-assert-failed LDA
 			#00 ;uxpec-assert-failed STA
 			assert/true
+
+			assert/stack-empty
 		end
 	end
 end
@@ -24,6 +27,8 @@ describe "assert/false 00
 	context "when 20 "the 20 "value 20 "on 20 "the 20 "stack 20 "is 20 "false 00
 		it "succeeds 00
 			#00 assert/false
+
+			assert/stack-empty
 		end
 	end
 
@@ -38,6 +43,34 @@ describe "assert/false 00
 			;uxpec-assert-failed LDA
 			#00 ;uxpec-assert-failed STA
 			assert/true
+
+			assert/stack-empty
+		end
+	end
+end
+
+describe "assert/stack-empty 00
+	context "when 20 "the 20 "stack 20 "is 20 "empty 00
+		it "succeeds 00
+			assert/stack-empty
+			assert/stack-empty
+		end
+	end
+
+	context "when 20 "the 20 "stack 20 "is 20 "not 20 "empty 00
+		it "fails 00
+			;uxpec-assert-failed-global LDA
+
+			#12
+			assert/stack-empty
+			POP
+
+			;uxpec-assert-failed-global STA
+
+			;uxpec-assert-failed LDA
+			#00 ;uxpec-assert-failed STA
+			assert/true
+			assert/stack-empty
 		end
 	end
 end

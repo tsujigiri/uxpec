@@ -5,12 +5,3 @@
 
 	~src/uxpec.tal
 
-@print
-	STH2r
-	&loop
-		LDAk DUP ?&print-char
-		POP INC2 JMP2
-	&print-char
-		#18 DEO INC2 !&loop
-
-
