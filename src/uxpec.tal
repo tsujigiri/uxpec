@@ -17,13 +17,13 @@
 		!&success
 
 	&stack-empty
-		#00 DEI2 ;uxpec-system-vector-backup STA2
+		#00 DEI2 ;uxpec/system-vector-backup STA2
 		;assert/stack-empty-catch #00 DEO2
 		POPk
-		;uxpec-system-vector-backup LDA2 #00 DEO2
+		;uxpec/system-vector-backup LDA2 #00 DEO2
 		!&fail
 		&stack-empty-catch
-			;uxpec-system-vector-backup LDA2 #00 DEO2
+			;uxpec/system-vector-backup LDA2 #00 DEO2
 			POP2 POP2
 			!&success
 
@@ -31,72 +31,73 @@
 		!&return
 
 	&fail
-		#01 ;uxpec-assert-failed STA
-		#01 ;uxpec-assert-failed-global STA
+		#01 ;uxpec/assert-failed STA
+		#01 ;uxpec/assert-failed-global STA
 		!&return
 
 	&return
-		#01 ;uxpec-assert-called STA
+		#01 ;uxpec/assert-called STA
 		JMP2r
 
 @uxpec-exit
-	;uxpec-assert-failed-global LDA ?&fail !&succeed
+	;uxpec/assert-failed-global LDA ?&fail !&succeed
 	&fail #010f DEO BRK
 	&succeed #800f DEO BRK
 
-@assert-success-symbol 20 f0 9f 91 8c 0a 00
-@assert-fail-symbol    20 f0 9f 94 a5 0a 00
-@uxpec-assert-failed 00
-@uxpec-assert-called 00
-@uxpec-assert-failed-global 00
-@uxpec-system-vector-backup 0000
-
 @describe
 @context
-	uxpec-indent
-	STH2r uxpec-print
+	uxpec/indent
+	STH2r uxpec/print
 	#0a18 DEO ( \n )
-	;uxpec-indent-level LDA INC ;uxpec-indent-level STA
+	;uxpec/indent-level LDA INC ;uxpec/indent-level STA
 	JMP2
 
 ( prints the address of the describe string and its own )
 @it
-	uxpec-indent
-	STH2r uxpec-print
-	;uxpec-indent-level LDA INC ;uxpec-indent-level STA
+	uxpec/indent
+	STH2r uxpec/print
+	;uxpec/indent-level LDA INC ;uxpec/indent-level STA
 	JMP2
 
 @end
-	;uxpec-indent-level LDA #01 SUB ;uxpec-indent-level STA
-	;uxpec-assert-called LDA ?&indicate-status !&return
+	;uxpec/indent-level LDA #01 SUB ;uxpec/indent-level STA
+	;uxpec/assert-called LDA ?&indicate-status !&return
 	&indicate-status
-		#00 ;uxpec-assert-called STA
-		;uxpec-assert-failed LDA ?&fail !&success
-		&fail ;assert-fail-symbol uxpec-print POP2 !&return
-		&success ;assert-success-symbol uxpec-print POP2
+		#00 ;uxpec/assert-called STA
+		;uxpec/assert-failed LDA ?&fail !&success
+		&fail ;uxpec/assert-fail-symbol uxpec/print POP2 !&return
+		&success ;uxpec/assert-success-symbol uxpec/print POP2
 
 	&return
-		#00 ;uxpec-assert-failed STA
+		#00 ;uxpec/assert-failed STA
 		JMP2r
 
-(
-	prints a null-terminated string from the absolute address on the stack and
-	jumps back to the address on the return stack
-)
-@uxpec-print
-	&loop
+@uxpec
+	&assert-success-symbol 20 f0 9f 91 8c 0a 00
+	&assert-fail-symbol    20 f0 9f 94 a5 0a 00
+	&assert-failed 00
+	&assert-called 00
+	&assert-failed-global 00
+	&system-vector-backup 0000
+
+
+	(
+		prints a null-terminated string from the absolute address on the stack and
+		jumps back to the address on the return stack
+	)
+	&print
 		LDAk DUP ?&print-char
 		POP INC2 JMP2r
-	&print-char
-		#18 DEO INC2 !&loop
+		&print-char
+			#18 DEO INC2 !&print
 
-@uxpec-indent
-  ;uxpec-indent-level LDA
-  &loop
-    DUP #00 EQU ?&return
-    #0918 DEO ( \t )
-    #01 SUB
-    !&loop
-  &return POP JMP2r
+	&indent
+		,&indent-level LDR
+		&indent-loop
+			DUP #00 EQU ?&return
+			#0918 DEO ( \t )
+			#01 SUB
+			!&indent-loop
+		&return POP JMP2r
 
-@uxpec-indent-level 00
+	&indent-level 00
