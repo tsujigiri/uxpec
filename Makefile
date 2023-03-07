@@ -18,7 +18,8 @@ debug: ${DEBUG_TARGET}
 test: bin/uxpec_test.rom
 	${UXNCLI} $^
 
-bin/uxpec_test.rom: src/uxpec.tal test/uxpec_test.tal test/assert_test.tal test/describe_context_it_test.tal
+bin/uxpec_test.rom: src/uxpec.tal test/uxpec_test.tal test/assert_test.tal \
+					test/describe_context_it_test.tal test/stack-stack_test.tal
 	${UXNASM} test/uxpec_test.tal $@
 
 bin/demo.rom: etc/demo.tal src/uxpec.tal

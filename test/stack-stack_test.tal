@@ -1,0 +1,19 @@
+describe "uxpec/create-stack-snapshot 00
+	context "when 20 "the 20 "stack 20 "is 20 "not 20 "empty 00
+		it "creates 20 "a 20 "snapshot 00
+			#1234 uxpec/create-stack-snapshot
+
+			;uxpec/stack-stack-ptr LDA2
+			LDAk #02 assert/equ ( load stack size )
+			#0001 SUB2
+			LDAk #12 assert/equ
+			#0001 SUB2
+			LDA #34 assert/equ
+
+			( check that the stack itself is unchanged )
+			#1234 assert/equ2
+
+			assert/stack-empty
+		end
+	end
+end

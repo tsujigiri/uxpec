@@ -16,14 +16,22 @@
 		?&fail
 		!&success
 
+	&equ
+		EQU
+		!&true
+
+	&equ2
+		EQU2
+		!&true
+
 	&stack-empty
-		#00 DEI2 ;uxpec/system-vector-backup STA2
+		uxpec/backup-system-vector
 		;assert/stack-empty-catch #00 DEO2
 		POPk
-		;uxpec/system-vector-backup LDA2 #00 DEO2
+		uxpec/restore-system-vector
 		!&fail
 		&stack-empty-catch
-			;uxpec/system-vector-backup LDA2 #00 DEO2
+			uxpec/restore-system-vector
 			POP2 POP2
 			!&success
 
@@ -78,7 +86,6 @@
 	&assert-failed 00
 	&assert-called 00
 	&assert-failed-global 00
-	&system-vector-backup 0000
 
 
 	(
@@ -101,3 +108,46 @@
 		&return POP JMP2r
 
 	&indent-level 00
+
+	&backup-system-vector
+		#00 DEI2 ,&system-vector-backup STR2
+		JMP2r
+
+	&restore-system-vector
+		,&system-vector-backup LDR2 #00 DEO2
+		JMP2r
+
+	&system-vector-backup 0000
+
+	&create-stack-snapshot
+		;uxpec/stack-stack-ptr LDA2
+		DUP2 ORA ?&skip-init-stack-stack-ptr
+			POP2 ;uxpec/stack-stack
+			DUP2 ,&stack-stack-ptr STR2
+			DUP2 ,&stack-stack-ptr-old STR2
+		&skip-init-stack-stack-ptr
+		,&backup-system-vector JSR
+		;uxpec/create-stack-snapshot-catch #00 DEO2
+		&create-stack-snapshot-loop
+			STAk INC2 DUP2 ,&stack-stack-ptr STR2 ROT POP
+			!&create-stack-snapshot-loop
+		&create-stack-snapshot-catch
+			,&restore-system-vector JSR
+			POP2 POP2
+			,&stack-stack-ptr LDR2 DUP2 ,&stack-stack-ptr-old LDR2
+			SUB2 SWP2 STA POP
+
+			( copy back onto stack )
+			;uxpec/stack-stack-ptr LDA2
+			LDAk STH ( load stack size and move to return stack )
+			&restore-stack-loop
+				#0001 SUB2 ( decrement stack ptr )
+				LDAk ROT ROT ( push value onto stack )
+				LITr 01 SUBr
+				STHkr ?&restore-stack-loop ( decrement stack size counter )
+			POPr POP2 JMP2r
+
+	( it's stacks all the way )
+	&stack-stack-ptr $2
+	&stack-stack-ptr-old $2
+	&stack-stack $1024
