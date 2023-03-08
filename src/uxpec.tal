@@ -120,12 +120,7 @@
 	&system-vector-backup 0000
 
 	&create-stack-snapshot
-		;uxpec/stack-stack-ptr LDA2
-		DUP2 ORA ?&skip-init-stack-stack-ptr
-			POP2 ;uxpec/stack-stack
-			DUP2 ,&stack-stack-ptr STR2
-			DUP2 ,&stack-stack-ptr-old STR2
-		&skip-init-stack-stack-ptr
+		,&next-stack-stack-addr JSR
 		,&backup-system-vector JSR
 		;uxpec/create-stack-snapshot-catch #00 DEO2
 		&create-stack-snapshot-loop
@@ -148,6 +143,18 @@
 				!&restore-stack-loop ( decrement stack size counter )
 			&skip-restore-stack-loop
 			POPr POP2 JMP2r
+
+	&next-stack-stack-addr
+		,&stack-stack-ptr LDR2
+		DUP2 #0000 EQU2 ?&init-stack-stack-ptr
+		INC2
+		DUP2 ,&stack-stack-ptr-old STR2
+		JMP2r
+		&init-stack-stack-ptr
+			POP2 ;uxpec/stack-stack
+			DUP2 ,&stack-stack-ptr STR2
+			DUP2 ,&stack-stack-ptr-old STR2
+		JMP2r
 
 	( it's stacks all the way )
 	&stack-stack-ptr $2
