@@ -141,11 +141,22 @@
 			;uxpec/stack-stack-ptr LDA2
 			LDAk STH ( load stack size and move to return stack )
 			&restore-stack-loop
+				STHkr #00 EQU ?&skip-restore-stack-loop
 				#0001 SUB2 ( decrement stack ptr )
 				LDAk ROT ROT ( push value onto stack )
 				LITr 01 SUBr
-				STHkr ?&restore-stack-loop ( decrement stack size counter )
+				!&restore-stack-loop ( decrement stack size counter )
+			&skip-restore-stack-loop
 			POPr POP2 JMP2r
+
+	&clear-stack
+		,&backup-system-vector JSR
+		;uxpec/clear-stack-catch #00 DEO2
+		&clear-stack-loop POP !&clear-stack-loop
+		&clear-stack-catch
+			,&restore-system-vector JSR
+			POP2 POP2
+			JMP2r
 
 	( it's stacks all the way )
 	&stack-stack-ptr $2
