@@ -21,8 +21,6 @@ describe "uxpec/create-stack-snapshot 00
 			#0000 ;uxpec/stack-stack-ptr-old STA2
 
 			#1234 uxpec/create-stack-snapshot
-
-
 			#5678 uxpec/create-stack-snapshot
 
 			;uxpec/stack-stack-ptr LDA2 ;uxpec/stack-stack-ptr-old LDA2 SUB2
