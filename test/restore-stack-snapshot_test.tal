@@ -1,0 +1,25 @@
+describe "uxpec/roll-back-stack 00
+	it "restores 20 "last 20 "stack 20 "snapshot 00
+		assert/stack-empty
+
+		;uxpec/stack-stack STH2
+		( 64 61 74 61 )
+		LIT "d STH2kr STA INC2r
+		LIT "a STH2kr STA INC2r
+		LIT "t STH2kr STA INC2r
+		LIT "a STH2kr STA INC2r
+		#04 STH2r STAk
+		;uxpec/stack-stack-ptr STA2
+		POP
+		#0000 ;uxpec/stack-stack-ptr-old STA2
+
+		uxpec/roll-back-stack
+
+		LIT "a LIT "d assert/equ2
+		LIT "a LIT "t assert/equ2
+
+		;uxpec/stack-stack-ptr LDA2 ;uxpec/stack-stack assert/equ2
+
+		assert/stack-empty
+	end
+end

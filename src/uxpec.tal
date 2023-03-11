@@ -130,18 +130,17 @@
 			POP2 POP2
 			,&stack-stack-ptr LDR2 DUP2 ,&stack-stack-ptr-old LDR2
 			SUB2 SWP2 STA POP
-
-			( copy back onto stack )
-			;uxpec/stack-stack-ptr LDA2
-			LDAk STH ( load stack size and move to return stack )
-			&restore-stack-loop
-				STHkr #00 EQU ?&skip-restore-stack-loop
-				#0001 SUB2 ( decrement stack ptr )
-				LDAk ROT ROT ( push value onto stack )
-				LITr 01 SUBr
-				!&restore-stack-loop ( decrement stack size counter )
-			&skip-restore-stack-loop
-			POPr POP2 JMP2r
+	&copy-snapshot-to-stack
+		;uxpec/stack-stack-ptr LDA2
+		LDAk STH ( load stack size and move to return stack )
+		&restore-stack-loop
+			STHkr #00 EQU ?&skip-restore-stack-loop
+			#0001 SUB2 ( decrement stack ptr )
+			LDAk ROT ROT ( push value onto stack )
+			LITr 01 SUBr
+			!&restore-stack-loop ( decrement stack size counter )
+		&skip-restore-stack-loop
+		POPr POP2 JMP2r
 
 	&next-stack-stack-addr
 		,&stack-stack-ptr LDR2
@@ -154,6 +153,17 @@
 			DUP2 ,&stack-stack-ptr STR2
 			DUP2 ,&stack-stack-ptr-old STR2
 		JMP2r
+
+	&roll-back-stack
+		;uxpec/roll-back-stack-catch ,&set-system-vector JSR
+		&roll-back-stack-loop POP !&roll-back-stack-loop
+		&roll-back-stack-catch
+			,&restore-system-vector JSR
+			POP2 POP2
+			,&copy-snapshot-to-stack JSR
+			( subtract stack size from stack pointer )
+			;uxpec/stack-stack-ptr LDA2k LDAk #00 SWP SUB2 SWP2 STA2
+			JMP2r
 
 	( it's stacks all the way )
 	&stack-stack-ptr $2

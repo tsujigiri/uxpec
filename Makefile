@@ -3,7 +3,7 @@ UXNEMU ?= uxnemu
 UXNCLI ?= uxncli
 UXN_ROMS ?= ${HOME}/roms
 DEBUGGER ?= ${UXN_ROMS}/beetbug.rom
-DEBUG_TARGET ?= bin/demo.rom
+DEBUG_TARGET ?= bin/uxpec_test.rom
 
 SHELL = /bin/bash
 .SUFFIXES:
@@ -18,8 +18,13 @@ debug: ${DEBUG_TARGET}
 test: bin/uxpec_test.rom
 	${UXNCLI} $^
 
-bin/uxpec_test.rom: src/uxpec.tal test/uxpec_test.tal test/assert_test.tal \
-					test/describe_context_it_test.tal test/stack-stack_test.tal
+bin/uxpec_test.rom: src/uxpec.tal \
+					test/uxpec_test.tal \
+					test/assert_test.tal \
+					test/describe_context_it_test.tal \
+					test/stack-stack_test.tal \
+					test/restore-stack-snapshot_test.tal \
+					test/helpers.tal
 	${UXNASM} test/uxpec_test.tal $@
 
 bin/demo.rom: etc/demo.tal src/uxpec.tal
