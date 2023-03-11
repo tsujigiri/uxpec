@@ -121,10 +121,12 @@
 
 	&create-stack-snapshot
 		,&next-stack-stack-addr JSR
+		DUP2 ,&stack-stack-ptr-old STR2
 		;uxpec/create-stack-snapshot-catch ,&set-system-vector JSR
 		&create-stack-snapshot-loop
 			STAk INC2 DUP2 ,&stack-stack-ptr STR2 ROT POP
 			!&create-stack-snapshot-loop
+		&stack-stack-ptr-old $2
 		&create-stack-snapshot-catch
 			,&restore-system-vector JSR
 			POP2 POP2
@@ -146,12 +148,10 @@
 		,&stack-stack-ptr LDR2
 		DUP2 #0000 EQU2 ?&init-stack-stack-ptr
 		INC2
-		DUP2 ,&stack-stack-ptr-old STR2
 		JMP2r
 		&init-stack-stack-ptr
 			POP2 ;uxpec/stack-stack
 			DUP2 ,&stack-stack-ptr STR2
-			DUP2 ,&stack-stack-ptr-old STR2
 		JMP2r
 
 	&roll-back-stack
@@ -167,5 +167,4 @@
 
 	( it's stacks all the way )
 	&stack-stack-ptr $2
-	&stack-stack-ptr-old $2
 	&stack-stack $1024
