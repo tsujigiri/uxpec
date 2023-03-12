@@ -18,6 +18,9 @@ debug: ${DEBUG_TARGET}
 test: bin/uxpec_test.rom
 	${UXNCLI} $^
 
+watch:
+	while inotifywait -r -e modify .; do make test; done
+
 bin/uxpec_test.rom: src/uxpec.tal \
 					test/uxpec_test.tal \
 					test/assert_test.tal \
@@ -30,4 +33,4 @@ bin/uxpec_test.rom: src/uxpec.tal \
 bin/demo.rom: etc/demo.tal src/uxpec.tal
 	${UXNASM} etc/demo.tal $@
 
-.PHONY: demo debug test
+.PHONY: demo debug test watch
