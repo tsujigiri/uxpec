@@ -154,6 +154,8 @@
 			DUP2 ,&stack-stack-ptr STR2
 		JMP2r
 
+	&stack-stack-ptr $2
+
 	&roll-back-stack
 		;uxpec/roll-back-stack-catch ,&set-system-vector JSR
 		&roll-back-stack-loop POP !&roll-back-stack-loop
@@ -162,9 +164,12 @@
 			POP2 POP2
 			,&copy-snapshot-to-stack JSR
 			( subtract stack size from stack pointer )
-			;uxpec/stack-stack-ptr LDA2k LDAk #00 SWP SUB2 SWP2 STA2
+			;uxpec/stack-stack-ptr LDA2k LDAk #00 SWP SUB2 #0001 SUB2  ( SWP2 STA2 )
+			DUP2 ;uxpec/stack-stack LTH2 ?&roll-back-stack-zero-ptr SWP2 STA2
+			JMP2r
+			&roll-back-stack-zero-ptr POP2 #0000 SWP2 STA2
 			JMP2r
 
-	( it's stacks all the way )
-	&stack-stack-ptr $2
+			;uxpec/stack-stack-ptr LDA2 #000e DEO POP2
+
 	&stack-stack $1024
