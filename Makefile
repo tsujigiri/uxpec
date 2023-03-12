@@ -21,13 +21,7 @@ test: bin/uxpec_test.rom
 watch:
 	while inotifywait -r -e modify .; do make test; done
 
-bin/uxpec_test.rom: src/uxpec.tal \
-					test/uxpec_test.tal \
-					test/assert_test.tal \
-					test/describe_context_it_test.tal \
-					test/stack-stack_test.tal \
-					test/restore-stack-snapshot_test.tal \
-					test/helpers.tal
+bin/uxpec_test.rom: src/uxpec.tal test/*.tal
 	${UXNASM} test/uxpec_test.tal $@
 
 bin/demo.rom: etc/demo.tal src/uxpec.tal
