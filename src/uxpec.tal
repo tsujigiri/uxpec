@@ -53,20 +53,22 @@
 
 @describe
 @context
+	uxpec/create-stack-snapshot
 	uxpec/indent
 	STH2r uxpec/print
 	#0a18 DEO ( \n )
 	;uxpec/indent-level LDA INC ;uxpec/indent-level STA
 	JMP2
 
-( prints the address of the describe string and its own )
 @it
+	uxpec/create-stack-snapshot
 	uxpec/indent
 	STH2r uxpec/print
 	;uxpec/indent-level LDA INC ;uxpec/indent-level STA
 	JMP2
 
 @end
+	uxpec/roll-back-stack
 	;uxpec/indent-level LDA #01 SUB ;uxpec/indent-level STA
 	;uxpec/assert-called LDA ?&indicate-status !&return
 	&indicate-status
@@ -108,15 +110,6 @@
 
 	&indent-level 00
 
-	&set-system-vector
-		#00 DEI2 ,&system-vector-backup STR2
-		#00 DEO2
-		JMP2r
-
-	&restore-system-vector
-		,&system-vector-backup LDR2 #00 DEO2
-		JMP2r
-
 	&system-vector-backup 0000
 
 	&create-stack-snapshot
@@ -132,6 +125,7 @@
 			POP2 POP2
 			,&stack-stack-ptr LDR2 DUP2 ,&stack-stack-ptr-old LDR2
 			SUB2 SWP2 STA POP
+
 	&copy-snapshot-to-stack
 		;uxpec/stack-stack-ptr LDA2
 		LDAk STH ( load stack size and move to return stack )
@@ -146,7 +140,7 @@
 
 	&next-stack-stack-addr
 		,&stack-stack-ptr LDR2
-		DUP2 #0000 EQU2 ?&init-stack-stack-ptr
+		DUP2 ;uxpec/stack-stack GTH2 #00 EQU ?&init-stack-stack-ptr
 		INC2
 		JMP2r
 		&init-stack-stack-ptr
@@ -154,7 +148,16 @@
 			DUP2 ,&stack-stack-ptr STR2
 		JMP2r
 
-	&stack-stack-ptr $2
+	&set-system-vector
+		#00 DEI2 ,&system-vector-backup STR2
+		#00 DEO2
+		JMP2r
+
+	&restore-system-vector
+		,&system-vector-backup LDR2 #00 DEO2
+		JMP2r
+
+	&stack-stack-ptr 0000
 
 	&roll-back-stack
 		;uxpec/roll-back-stack-catch ,&set-system-vector JSR
@@ -164,12 +167,11 @@
 			POP2 POP2
 			,&copy-snapshot-to-stack JSR
 			( subtract stack size from stack pointer )
+			;uxpec/stack-stack-ptr LDA2 ;uxpec/stack-stack GTH2 #00 EQU ?&roll-back-stack-return
 			;uxpec/stack-stack-ptr LDA2k LDAk #00 SWP SUB2 #0001 SUB2  ( SWP2 STA2 )
 			DUP2 ;uxpec/stack-stack LTH2 ?&roll-back-stack-zero-ptr SWP2 STA2
 			JMP2r
 			&roll-back-stack-zero-ptr POP2 #0000 SWP2 STA2
-			JMP2r
-
-			;uxpec/stack-stack-ptr LDA2 #000e DEO POP2
+			&roll-back-stack-return JMP2r
 
 	&stack-stack $1024

@@ -1,8 +1,7 @@
 |0100
 	~test/assert_test.tal
 	~test/describe_context_it_test.tal
-	~test/stack-stack_test.tal
-	~test/restore-stack-snapshot_test.tal
+	~test/stack_test.tal
 	!uxpec-exit
 
 	~src/uxpec.tal
