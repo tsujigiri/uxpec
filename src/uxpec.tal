@@ -16,14 +16,21 @@
 		?&fail
 		!&success
 
+	&equ
+		EQU
+		!&true
+
+	&equ2
+		EQU2
+		!&true
+
 	&stack-empty
-		#00 DEI2 ;uxpec/system-vector-backup STA2
-		;assert/stack-empty-catch #00 DEO2
+		;assert/stack-empty-catch uxpec/set-system-vector
 		POPk
-		;uxpec/system-vector-backup LDA2 #00 DEO2
+		uxpec/restore-system-vector
 		!&fail
 		&stack-empty-catch
-			;uxpec/system-vector-backup LDA2 #00 DEO2
+			uxpec/restore-system-vector
 			POP2 POP2
 			!&success
 
@@ -46,20 +53,22 @@
 
 @describe
 @context
+	uxpec/create-stack-snapshot
 	uxpec/indent
 	STH2r uxpec/print
 	#0a18 DEO ( \n )
 	;uxpec/indent-level LDA INC ;uxpec/indent-level STA
 	JMP2
 
-( prints the address of the describe string and its own )
 @it
+	uxpec/create-stack-snapshot
 	uxpec/indent
 	STH2r uxpec/print
 	;uxpec/indent-level LDA INC ;uxpec/indent-level STA
 	JMP2
 
 @end
+	uxpec/roll-back-stack
 	;uxpec/indent-level LDA #01 SUB ;uxpec/indent-level STA
 	;uxpec/assert-called LDA ?&indicate-status !&return
 	&indicate-status
@@ -78,7 +87,6 @@
 	&assert-failed 00
 	&assert-called 00
 	&assert-failed-global 00
-	&system-vector-backup 0000
 
 
 	(
@@ -101,3 +109,69 @@
 		&return POP JMP2r
 
 	&indent-level 00
+
+	&system-vector-backup 0000
+
+	&create-stack-snapshot
+		,&next-stack-stack-addr JSR
+		DUP2 ,&stack-stack-ptr-old STR2
+		;uxpec/create-stack-snapshot-catch ,&set-system-vector JSR
+		&create-stack-snapshot-loop
+			STAk INC2 DUP2 ,&stack-stack-ptr STR2 ROT POP
+			!&create-stack-snapshot-loop
+		&stack-stack-ptr-old $2
+		&create-stack-snapshot-catch
+			,&restore-system-vector JSR
+			POP2 POP2
+			,&stack-stack-ptr LDR2 DUP2 ,&stack-stack-ptr-old LDR2
+			SUB2 SWP2 STA POP
+
+	&copy-snapshot-to-stack
+		;uxpec/stack-stack-ptr LDA2
+		LDAk STH ( load stack size and move to return stack )
+		&restore-stack-loop
+			STHkr #00 EQU ?&skip-restore-stack-loop
+			#0001 SUB2 ( decrement stack ptr )
+			LDAk ROT ROT ( push value onto stack )
+			LITr 01 SUBr
+			!&restore-stack-loop ( decrement stack size counter )
+		&skip-restore-stack-loop
+		POPr POP2 JMP2r
+
+	&next-stack-stack-addr
+		,&stack-stack-ptr LDR2
+		DUP2 ;uxpec/stack-stack GTH2 #00 EQU ?&init-stack-stack-ptr
+		INC2
+		JMP2r
+		&init-stack-stack-ptr
+			POP2 ;uxpec/stack-stack
+			DUP2 ,&stack-stack-ptr STR2
+		JMP2r
+
+	&set-system-vector
+		#00 DEI2 ,&system-vector-backup STR2
+		#00 DEO2
+		JMP2r
+
+	&restore-system-vector
+		,&system-vector-backup LDR2 #00 DEO2
+		JMP2r
+
+	&stack-stack-ptr 0000
+
+	&roll-back-stack
+		;uxpec/roll-back-stack-catch ,&set-system-vector JSR
+		&roll-back-stack-loop POP !&roll-back-stack-loop
+		&roll-back-stack-catch
+			,&restore-system-vector JSR
+			POP2 POP2
+			,&copy-snapshot-to-stack JSR
+			( subtract stack size from stack pointer )
+			;uxpec/stack-stack-ptr LDA2 ;uxpec/stack-stack GTH2 #00 EQU ?&roll-back-stack-return
+			;uxpec/stack-stack-ptr LDA2k LDAk #00 SWP SUB2 #0001 SUB2  ( SWP2 STA2 )
+			DUP2 ;uxpec/stack-stack LTH2 ?&roll-back-stack-zero-ptr SWP2 STA2
+			JMP2r
+			&roll-back-stack-zero-ptr POP2 #0000 SWP2 STA2
+			&roll-back-stack-return JMP2r
+
+	&stack-stack $1024

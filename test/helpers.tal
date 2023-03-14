@@ -1,0 +1,18 @@
+@pmem ( addr* -- )
+	STH2
+	#0000
+	&l
+		#00 OVR STH2kr ADD2 LDA ,print/byte JSR
+		DUP #0f AND #0f NEQ #16 MUL #0a ADD #18 DEO
+		INC NEQk ,&l JCN
+	POP2
+	POP2r
+JMP2r
+
+@print ( v* -- )
+
+	SWP ,&byte JSR
+	&byte ( byte -- ) DUP #04 SFT ,&char JSR
+	&char ( char -- ) #0f AND DUP #09 GTH #27 MUL ADD #30 ADD #18 DEO
+
+JMP2r
