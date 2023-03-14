@@ -1,13 +1,14 @@
 describe "stack 20 "handling 00
+	#01
 	context "when 20 "the 20 "stack 20 "is 20 "not 20 "empty 00
-		#01
+		#02
 		it "is 20 "visible 20 "from 20 "inside 20 "it 00
-			#01 assert/equ
-			#02
+			#0102 assert/equ2
+			#03
 		end
 
 		it "is 20 "still 20 "visible 20 "from 20 "inside 20 "it 00
-			#01 assert/equ
+			#0102 assert/equ2
 		end
 	end
 end

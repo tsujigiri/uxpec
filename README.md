@@ -16,6 +16,8 @@ run:
 * `assert/true`: checks for a non-zero byte on the stack
 * `assert/false`: checks for a zero byte on the stack
 * `assert/stack-empty`: checks for the working stack being empty
+* `assert/equ`: asserts that `EQU` is true
+* `assert/equ2`: asserts that `EQU2` is true
 
 A simple example:
 
@@ -50,6 +52,27 @@ my code
 ```
 
 and it will return with a non-zero exit code.
+
+`describe`, `context` and `it`, together with `end`, work sort of as a closure,
+where the stack, set up in the outer *block* is the same within every enclosed
+*block*, no matter what happens in the neighboring *blocks*.
+
+```
+describe "my 20 "test 00
+	#01
+	context "when 20 "there 20 "is 20 "something 20 "on 20 "the 20 "stack 00
+		#02
+		it "is 20 "visible 00
+			#0102 assert/equ2
+			#03
+		end
+
+		it "is 20 "still 20 "visible 00
+			#0102 assert/equ2
+		end
+	end
+end
+```
 
 See `etc/demo.tal` for a complete example.
 
